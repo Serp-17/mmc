@@ -1,10 +1,34 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
+import { authService } from '@/services/auth.services';
+import { useStore } from 'vuex';
 import { ref } from 'vue';
 
-const email = ref('');
-const password = ref('');
+const store = useStore();
+const email = ref('op@gmail.com');
+const password = ref('password');
 const checked = ref(false);
+
+const handleSubmit = () => {
+    console.log(email.value);
+    console.log(password.value);
+    if (email.value || password.value) {
+        authService
+            .login({
+                username: email.value,
+                password: password.value
+            })
+            .then((res) => {
+                const token = res.data.token;
+                store.dispatch('user/setToken', token);
+            })
+            .finally(() => {
+                console.log(store);
+            });
+    } else {
+        console.log(99999999);
+    }
+};
 </script>
 
 <template>
@@ -49,7 +73,7 @@ const checked = ref(false);
                             </div>
                             <span class="font-medium no-underline ml-2 text-right cursor-pointer text-primary">Forgot password?</span>
                         </div>
-                        <Button label="Sign In" class="w-full" as="router-link" to="/"></Button>
+                        <Button label="Sign In" class="w-full" @click="handleSubmit"></Button>
                     </div>
                 </div>
             </div>

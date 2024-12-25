@@ -32,7 +32,7 @@ export default {
             return state.token;
         },
         isLoggedIn(state) {
-            return !!state.user;
+            return !!state.token;
         }
     }
 };

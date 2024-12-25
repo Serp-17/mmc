@@ -1,5 +1,5 @@
 const express = require("express");
-const { addItemIfNotExist } = require("../models/storageModel");
+const { addItemIfNotExist, getAllStock } = require("../models/storageModel");
 
 const router = express.Router();
 
@@ -16,6 +16,17 @@ router.post("/add", require("../middleware/auth"), async (req, res) => {
         res.status(500).json({ message: "Error store", error: err.message });
     }
 
+});
+
+router.get('/stock', require("../middleware/auth"), async (req, res) => {
+    try {
+        const stock = await getAllStock();
+        console.log(stock)
+        res.status(200).json(stock);
+    } catch (err) {
+        console.error(err);
+        res.status(500).json({ error: 'Failed to fetch stock' });
+    }
 });
 
 module.exports = router;

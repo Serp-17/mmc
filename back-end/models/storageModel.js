@@ -42,7 +42,17 @@ const addItemIfNotExist = async (name, description, quantity) => {
             }
         });
     });
+}
+
+const getAllStock = async () => {
+    return new Promise((resolve, reject) => {
+        const query = "SELECT * FROM items";
+
+        db.query(query, (err, results) => {
+            if (err) return reject(err);
+            resolve(results); // Возвращаем список всех товаров
+        });
+    });
 };
 
-
-module.exports = { addItemIfNotExist };
+module.exports = { addItemIfNotExist, getAllStock };

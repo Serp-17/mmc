@@ -1,17 +1,18 @@
 <script setup>
 import FloatingConfigurator from '@/components/FloatingConfigurator.vue';
-import { authService } from '@/services/auth.services';
+import { authService } from '@/services/AuthService';
 import { useStore } from 'vuex';
 import { ref } from 'vue';
+import { useRouter, useRoute } from 'vue-router';
 
 const store = useStore();
+const router = useRouter();
+const route = useRoute();
 const email = ref('op@gmail.com');
 const password = ref('password');
 const checked = ref(false);
 
 const handleSubmit = () => {
-    console.log(email.value);
-    console.log(password.value);
     if (email.value || password.value) {
         authService
             .login({
@@ -20,10 +21,13 @@ const handleSubmit = () => {
             })
             .then((res) => {
                 const token = res.data.token;
+                const redirect = route.query.redirect || '/';
+
                 store.dispatch('user/setToken', token);
+                router.push(redirect);
             })
-            .finally(() => {
-                console.log(store);
+            .catch((err) => {
+                console.log(err);
             });
     } else {
         console.log(99999999);

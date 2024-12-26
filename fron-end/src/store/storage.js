@@ -3,7 +3,8 @@ import { storageService } from '@/services/StorageService';
 export default {
     namespaced: true,
     state: () => ({
-        storage: []
+        storage: [],
+        item: null
     }),
     mutations: {
         setStorage(state, storage) {
@@ -11,6 +12,9 @@ export default {
         },
         addItem(state, item) {
             state.storage.push(item);
+        },
+        setItem(state, item) {
+            state.item = item;
         }
     },
     actions: {
@@ -24,9 +28,6 @@ export default {
             }
         },
         async addItem({ commit }, newItem) {
-            console.log('------------')
-            console.log(newItem)
-            console.log('------------')
             try {
                 const res = await storageService.addNewItem(newItem);
                 commit('addItem', res.data);
@@ -34,11 +35,23 @@ export default {
                 console.error('Error adding new item:', err);
                 throw err;
             }
+        },
+        async fetchItemById({ commit }, id) {
+            try {
+                const res = await storageService.getItemById(id);
+                commit('setItem', res.data);
+            } catch (err) {
+                console.error('Error fetching storage:', err);
+                commit('setItem', null);
+            }
         }
     },
     getters: {
         getStorage(state) {
             return state.storage;
+        },
+        getItem(state) {
+            return state.item;
         }
     }
 };

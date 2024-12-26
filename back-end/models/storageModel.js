@@ -55,4 +55,20 @@ const getAllStock = async () => {
     });
 };
 
-module.exports = { addItemIfNotExist, getAllStock };
+const getItemById = async (id) => {
+    return new Promise((resolve, reject) => {
+        const query = "SELECT * FROM items WHERE id = ?";
+
+        db.query(query, [id], (err, results) => {
+            if (err) {
+                return reject(err);
+            }
+            if (results.length === 0) {
+                return resolve(null);
+            }
+            resolve(results[0]);
+        });
+    });
+};
+
+module.exports = { addItemIfNotExist, getAllStock, getItemById };

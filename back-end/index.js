@@ -6,6 +6,7 @@ const authRoutes = require("./routes/authRoutes");
 const rolesRoutes = require("./routes/rolesRoutes");
 const userRoutes = require("./routes/userRoutes");
 const storageRoutes = require("./routes/storageRouter");
+const transactionRoutes = require("./routes/transactionRoutes");
 
 dotenv.config();
 
@@ -23,6 +24,7 @@ app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/roles", rolesRoutes);
 app.use("/storage", storageRoutes);
+app.use("/transactions", transactionRoutes);
 
 // Запуск сервера
 const PORT = process.env.PORT || 3000;

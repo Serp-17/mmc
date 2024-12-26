@@ -1,7 +1,9 @@
 <script setup>
 import { ref } from 'vue';
 import { useStore } from 'vuex';
+import { useToast } from 'primevue/usetoast';
 
+const toast = useToast();
 const store = useStore();
 const breadcrumbHome = ref({ icon: 'pi pi-home', to: '/' });
 const breadcrumbItems = ref([{ label: 'Warehouse', link: '/warehouse' }, { label: 'Add item' }]);
@@ -16,6 +18,7 @@ const isLoader = ref(false);
 const addItem = () => {
     isLoader.value = true;
     store.dispatch('storage/addItem', form.value).finally(() => {
+        toast.add({ severity: 'success', summary: 'Successfully added', life: 3000 });
         isLoader.value = false;
         form.value.name = '';
         form.value.quantity = '';

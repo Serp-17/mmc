@@ -1,9 +1,24 @@
 <script setup>
-import { computed, onMounted } from 'vue';
+import { computed, onMounted, ref } from 'vue';
 import { useStore } from 'vuex';
+import { useToast } from 'primevue/usetoast';
 
+const toast = useToast();
 const store = useStore();
 const storage = computed(() => store.getters['storage/getStorage']);
+const display = ref(false);
+const selectedId = ref(null);
+const quantity = ref(null);
+
+const open = (id) => {
+    selectedId.value = id;
+    display.value = true;
+};
+
+const takeItem = () => {
+    toast.add({ severity: 'success', summary: 'Success', detail: `You successfully took the ${storage.value.find((item) => item.id === selectedId.value).name}`, life: 3000 });
+    display.value = false;
+};
 
 onMounted(() => {
     store.dispatch('storage/fetchStorage');
@@ -26,7 +41,9 @@ onMounted(() => {
             </Column>
             <Column field="name" header="Name" style="min-width: 12rem">
                 <template #body="{ data }">
-                    {{ data.name }}
+                    <router-link :to="{ name: 'item', params: { id: data.id } }">
+                        {{ data.name }}
+                    </router-link>
                 </template>
                 <template #filter="{ filterModel }">
                     <InputText v-model="filterModel.value" type="text" placeholder="Search by name" />
@@ -48,8 +65,22 @@ onMounted(() => {
                     <InputText v-model="filterModel.value" type="text" placeholder="Search by name" />
                 </template>
             </Column>
+            <Column header="" style="min-width: 5rem">
+                <template #body="{ data }">
+                    <Button label="Take" class="w-full" @click="open(data.id)"></Button>
+                </template>
+            </Column>
         </DataTable>
     </div>
+    <Dialog v-if="selectedId" :header="`You take ${storage.find((item) => item.id === selectedId).name}`" v-model:visible="display" :breakpoints="{ '960px': '75vw' }" :style="{ width: '30vw' }" :modal="true">
+        <div class="flex flex-wrap gap-2 w-full">
+            <label for="quantity">Quantity</label>
+            <InputText id="quantity" type="number" v-model="quantity" />
+        </div>
+        <template #footer>
+            <Button label="Save" @click="takeItem" />
+        </template>
+    </Dialog>
 </template>
 
 <style scoped lang="scss">

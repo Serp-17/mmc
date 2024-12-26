@@ -9,5 +9,9 @@ export const storageService = {
 
     async addNewItem(newItem) {
         return await axiosWithAuth.post(`${URL_AUTH}/add`, newItem);
+    },
+
+    async getItemById(id) {
+        return await axiosWithAuth.get(`${URL_AUTH}/item/${id}`);
     }
 };

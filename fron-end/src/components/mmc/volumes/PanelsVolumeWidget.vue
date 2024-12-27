@@ -27,7 +27,7 @@ const { params } = useRoute();
             </Column>
             <Column style="width: 15%" header="View">
                 <template #body>
-                    <Button as="router-link" icon="pi pi-search" type="button" class="p-button-text"></Button>
+                    <Button as="router-link" :to="`/panel/${1}`" icon="pi pi-search" type="button" class="p-button-text"></Button>
                 </template>
             </Column>
         </DataTable>

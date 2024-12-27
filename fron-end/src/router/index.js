@@ -61,6 +61,12 @@ const router = createRouter({
                     component: () => import('@/views/pages/Volumes/item.vue'),
                     meta: { requiresAuth: true }
                 },
+                {
+                    path: '/panels/:id',
+                    name: 'panels_item',
+                    component: () => import('@/views/pages/Panels/index.vue'),
+                    meta: { requiresAuth: true }
+                },
             ]
         },
         {

@@ -100,9 +100,10 @@ const createVolumesTable = `
         panels INT NOT NULL DEFAULT 0,
         progress INT NOT NULL DEFAULT 0,
         link TEXT NOT NULL,
+        status ENUM('in progress', 'planned', 'done') NOT NULL DEFAULT 'planned',
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
-    );
+        );
 `;
 
 connection.query(createVolumesTable, (err) => {
@@ -118,13 +119,14 @@ const createPanelsTable = `
         tracking_number VARCHAR(100),
         link JSON,
         status ENUM('null', 'in progress', 'qa', 'done') DEFAULT 'null',
+        type ENUM('FC', 'EP', 'IP', 'RC', 'RU', 'PP', 'PW') NOT NULL,
         date_completed DATE,
         date_shipped DATE,
         comment TEXT,
         created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         FOREIGN KEY (volume_id) REFERENCES volumes(id) ON DELETE CASCADE
-    );
+        );
 `;
 
 connection.query(createPanelsTable, (err) => {

@@ -6,6 +6,12 @@ export const panelsService = {
     async getPanels(id) {
         // return await axiosWithAuth.get(`${URL_AUTH}/${id}`);
         return await PanelsTest.getPanels();
+    },
+    async getInProgressPanels(id) {
+        return await PanelsTest.getPanelsStatus();
+    },
+    async getPanelsStatistic(id) {
+        return await PanelsTest.getPanelsStatistic();
     }
 };
 
@@ -196,5 +202,42 @@ const PanelsTest = {
     },
     getPanels() {
         return Promise.resolve({data: this.getData()});
+    },
+    getPanelsStatus() {
+        return Promise.resolve({data: this.getData().filter(item => item.status === 'in progress')});
+    },
+    getPanelsStatistic(id) {
+        return Promise.resolve({
+            data: {
+                FC: {
+                    progress: 11,
+                    quantity: 100
+                },
+                EP: {
+                    progress: 20,
+                    quantity: 100
+                },
+                IP: {
+                    progress: 30,
+                    quantity: 100
+                },
+                RC: {
+                    progress: 50,
+                    quantity: 100
+                },
+                RU: {
+                    progress: 80,
+                    quantity: 100
+                },
+                PP: {
+                    progress: 57,
+                    quantity: 100
+                },
+                PW: {
+                    progress: 22,
+                    quantity: 100
+                }
+            }
+        });
     }
 };

@@ -1,25 +1,35 @@
 const db = require("../config/db");
 
 // Добавление нового пользователя
-const createUser = async (username, password) => {
+const createUser = async (email, password) => {
     return new Promise((resolve, reject) => {
-        const query = "INSERT INTO users (username, password) VALUES (?, ?)";
-        db.query(query, [username, password], (err, result) => {
+        const query = "INSERT INTO users (email, password) VALUES (?, ?)";
+        db.query(query, [email, password], (err, result) => {
             if (err) return reject(err);
-            resolve({ id: result.insertId, username });
+            resolve({ id: result.insertId, email });
         });
     });
 };
 
 // Поиск пользователя по username
-const findUserByUsername = async (username) => {
+const findUserByUsername = async (email) => {
     return new Promise((resolve, reject) => {
-        const query = "SELECT * FROM users WHERE username = ?";
-        db.query(query, [username], (err, results) => {
+        const query = "SELECT * FROM users WHERE email = ?";
+        db.query(query, [email], (err, results) => {
             if (err) return reject(err);
             resolve(results[0]);
         });
     });
 };
 
-module.exports = { createUser, findUserByUsername };
+const getAllUsers = async () => {
+    return new Promise((resolve, reject) => {
+        const query = "SELECT * FROM users";
+        db.query(query, (err, results) => {
+            if (err) return reject(err);
+            resolve(results);
+        });
+    });
+};
+
+module.exports = { createUser, findUserByUsername, getAllUsers };

@@ -42,7 +42,25 @@ const router = createRouter({
                     name: 'item',
                     component: () => import('@/views/pages/Warehouse/item.vue'),
                     meta: { requiresAuth: true }
-                }
+                },
+                {
+                    path: '/volumes',
+                    name: 'volumes',
+                    component: () => import('@/views/pages/Volumes/index.vue'),
+                    meta: { requiresAuth: true }
+                },
+                {
+                    path: '/volumes/add',
+                    name: 'volumes_add',
+                    component: () => import('@/views/pages/Volumes/create.vue'),
+                    meta: { requiresAuth: true }
+                },
+                {
+                    path: '/volumes/:id',
+                    name: 'volumes_item',
+                    component: () => import('@/views/pages/Volumes/item.vue'),
+                    meta: { requiresAuth: true }
+                },
             ]
         },
         {

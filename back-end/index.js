@@ -7,6 +7,8 @@ const rolesRoutes = require("./routes/rolesRoutes");
 const userRoutes = require("./routes/userRoutes");
 const storageRoutes = require("./routes/storageRouter");
 const transactionRoutes = require("./routes/transactionRoutes");
+const volumeRouter = require("./routes/volumeRouter");
+const panelRouter = require("./routes/panelRouter");
 
 dotenv.config();
 
@@ -19,14 +21,14 @@ app.use(cors({
     allowedHeaders: ['Content-Type', 'Authorization']
 }));
 
-// Роуты
 app.use("/auth", authRoutes);
 app.use("/user", userRoutes);
 app.use("/roles", rolesRoutes);
 app.use("/storage", storageRoutes);
 app.use("/transactions", transactionRoutes);
+app.use("/volume", volumeRouter);
+app.use("/panel", panelRouter);
 
-// Запуск сервера
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);

@@ -1,31 +1,26 @@
 <script setup>
-import { PhotoService } from '@/service/PhotoService';
-import { ProductService } from '@/service/ProductService';
 import Img from '@/assets/LWP15068-Enhanced-NR-Edit.webp';
-import { onMounted, ref } from 'vue';
+import { onMounted, computed } from 'vue';
+import { useStore } from 'vuex';
 
-const products = ref([]);
-const images = ref([]);
+const store = useStore();
+const volumes = computed(() => store.getters['volumes/getVolumes']);
 onMounted(() => {
-    ProductService.getProductsSmall().then((data) => (products.value = data));
-    PhotoService.getImages().then((data) => (images.value = data));
+    store.dispatch('volumes/fetchVolumes');
 });
 
-function getSeverity(status) {
+const getSeverity = (status) => {
     switch (status) {
-        case 'INSTOCK':
+        case 'done':
             return 'success';
-
-        case 'LOWSTOCK':
+        case 'planned':
+            return 'info';
+        case 'in progress':
             return 'warning';
-
-        case 'OUTOFSTOCK':
-            return 'danger';
-
         default:
             return null;
     }
-}
+};
 </script>
 
 <template>
@@ -35,26 +30,23 @@ function getSeverity(status) {
             <Button as="router-link" label="Add new" to="/volumes/add"></Button>
         </div>
         <div class="grid grid-cols-3">
-            <router-link v-for="(item, index) in products" :key="index" :to="`/volumes/${1}`">
-                <div class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
-                    <div class="mb-4">
-                        <div class="relative mx-auto h-80 flex">
-                            <img :src="Img" :alt="item.name" class="w-full rounded object-fill" />
-                            <div class="dark:bg-surface-900 absolute rounded-border" style="left: 5px; top: 5px">
-                                <Tag :value="item.inventoryStatus" :severity="getSeverity(item.inventoryStatus)" />
-                            </div>
+            <div v-for="(item, index) in volumes" :key="index" class="border border-surface-200 dark:border-surface-700 rounded m-2 p-4">
+                <div class="mb-4">
+                    <div class="relative mx-auto h-80 flex">
+                        <img :src="Img" :alt="item.name" class="w-full rounded object-fill" />
+                        <div class="dark:bg-surface-900 absolute rounded-border" style="left: 5px; top: 5px">
+                            <Tag class="uppercase" :value="item.status" :severity="getSeverity(item.status)" />
                         </div>
                     </div>
-                    <div class="mb-4 font-medium">{{ item.name }}</div>
-                    <div class="flex justify-between items-center">
-                        <div class="mt-0 font-semibold text-xl">${{ item.price }}</div>
-                        <span>
-                            <Button icon="pi pi-heart" severity="secondary" outlined />
-                            <Button icon="pi pi-shopping-cart" class="ml-2" />
-                        </span>
-                    </div>
                 </div>
-            </router-link>
+                <div class="flex justify-between items-center">
+                    <div class="font-medium">{{ item.name }}</div>
+                    <span class="flex gap-4">
+                        <Button as="router-link" :to="`/volumes/${item.id}`" icon="pi pi-eye" />
+                        <Button as="a" target="_blank" :href="item.link" icon="pi pi-folder-open" severity="secondary" outlined />
+                    </span>
+                </div>
+            </div>
         </div>
     </div>
 </template>

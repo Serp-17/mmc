@@ -26,8 +26,8 @@ app.use("/user", userRoutes);
 app.use("/roles", rolesRoutes);
 app.use("/storage", storageRoutes);
 app.use("/transactions", transactionRoutes);
-app.use("/volume", volumeRouter);
-app.use("/panel", panelRouter);
+app.use("/volumes", volumeRouter);
+app.use("/panels", panelRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

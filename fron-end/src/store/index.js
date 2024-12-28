@@ -3,13 +3,17 @@ import user from './user';
 import storage from './storage';
 import transactions from './transactions';
 import panels from './panels';
+import stations from './stations';
+import volumes from './volumes';
 
 const store = createStore({
     modules: {
         user,
         storage,
         transactions,
-        panels
+        panels,
+        stations,
+        volumes
     }
 });
 

@@ -1,14 +1,15 @@
 const db = require("../config/db");
 
-const createPanel = async (volumeId, name, trackingNumber, link, status, dateCompleted, dateShipped, comment) => {
+const createPanel = async (volumeId, name, trackingNumber, link, status, dateCompleted, dateShipped, comment, type) => {
     return new Promise((resolve, reject) => {
         const query = `
-            INSERT INTO panels (volume_id, name, tracking_number, link, status, date_completed, date_shipped, comment)
-            VALUES (?, ?, ?, ?, ?, ?, ?, ?)
+            INSERT INTO panels (volume_id, name, tracking_number, link, status, date_completed, date_shipped, comment, type)
+            VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)
         `;
-        db.query(query, [volumeId, name, trackingNumber, JSON.stringify(link), status, dateCompleted, dateShipped, comment], (err, result) => {
+
+        db.query(query, [volumeId, name, trackingNumber, JSON.stringify(link), status, dateCompleted, dateShipped, comment, type], (err, result) => {
             if (err) return reject(err);
-            resolve({ id: result.insertId, volumeId, name, trackingNumber, link, status, dateCompleted, dateShipped, comment });
+            resolve({ id: result.insertId, volumeId, name, trackingNumber, link, status, dateCompleted, dateShipped, comment, type });
         });
     });
 };

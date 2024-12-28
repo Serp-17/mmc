@@ -1,17 +1,22 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { ref } from 'vue';
+import { useStore } from 'vuex';
 
+const store = useStore();
 const name = ref(null);
 const link = ref(null);
 const breadcrumbHome = ref({ icon: 'pi pi-home', to: '/' });
 const breadcrumbItems = ref([{ label: 'Volumes', url: '/volumes' }, { label: 'Add volume' }]);
 
-// onMounted(() => {
-//
-// });
-
 const isDisabled = () => {
     return !name.value || !link.value;
+};
+
+const handleSubmit = () => {
+    store.dispatch('volumes/addNewVolume', {
+        name: name.value,
+        link: link.value
+    });
 };
 </script>
 
@@ -29,7 +34,7 @@ const isDisabled = () => {
                     <InputText id="username" type="text" v-model="link" />
                     <label for="username">Folder link</label>
                 </FloatLabel>
-                <Button label="Submit" :disabled="isDisabled()"></Button>
+                <Button label="Submit" :disabled="isDisabled()" @click="handleSubmit"></Button>
             </div>
         </div>
     </Fluid>

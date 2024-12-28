@@ -1,6 +1,5 @@
 <script setup>
 import { BFly, Info, Internal, Cassettes, Saw1, Saw2, Wek, Parapet, JoistPrep, WindowStation } from './Stations';
-
 import { onMounted, ref } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
 

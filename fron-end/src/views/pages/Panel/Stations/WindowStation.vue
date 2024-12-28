@@ -46,21 +46,8 @@ const handleSelect = (event) => {
     <Fluid class="flex flex-col justify-center md:flex-row gap-8 mt-8">
         <div class="md:w-1/2">
             <div class="card flex flex-col gap-8">
-                <div>
-                    <div class="font-semibold text-xl flex items-center gap-4 mb-4">
-                        1. Are all overhangs & underhangs correct?
-                    </div>
-                    <Select v-model="areOverhangsAndUnderhangsCorrect" :options="dropdownValues" optionLabel="name" placeholder="Select" />
-                </div>
-                <div>
-                    <div class="font-semibold text-xl flex items-center gap-4 mb-4">
-                        2. Is the frame within specification?
-                    </div>
-                    <div class="font-semibold text-xl"></div>
-                    <Select v-model="isFrameWithinSpecification" :options="dropdownValues" optionLabel="name" placeholder="Select" />
-                </div>
                 <div class="col-span-full lg:col-span-6">
-                    <div class="font-semibold text-xl mb-4">3. Insert image to this box showing insulated voids</div>
+                    <div class="font-semibold text-xl mb-4">Insert image of Prepared window('s)</div>
                     <FileUpload
                         mode="basic"
                         name="demo[]"
@@ -80,7 +67,7 @@ const handleSelect = (event) => {
                     </div>
                 </div>
                 <div class="col-span-full lg:col-span-6">
-                    <div class="font-semibold text-xl mb-4">4. Insert image to this box showing window opening/ taping of the panel</div>
+                    <div class="font-semibold text-xl mb-4">Insert image of external window side</div>
                     <FileUpload
                         mode="basic"
                         name="demo[]"
@@ -100,7 +87,7 @@ const handleSelect = (event) => {
                     </div>
                 </div>
                 <div class="col-span-full lg:col-span-6">
-                    <div class="font-semibold text-xl mb-4">5. Insert image to this box showing A1 board fitted</div>
+                    <div class="font-semibold text-xl mb-4">Insert image of internal window side</div>
                     <FileUpload
                         mode="basic"
                         name="demo[]"

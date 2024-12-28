@@ -7,16 +7,24 @@ const dropdownValues = ref([
     { name: 'Yes', value: 'yes' },
     { name: 'No', code: 'no' }
 ]);
-const isMaterialDefectFree = ref(null);
-const arePiecesLabelledCorrectly = ref(null);
-const areItemsInTolerance = ref(null);
+
+const hasCorrectNumberOfJoistsProcessed = ref(null);
+const areAnyHolesMissing = ref(null);
+const areAllHolesInCorrectLocation = ref(null);
+const areAllHolesNeatlyCut = ref(null);
+const areAllJoistsLabelled = ref(null);
+
 const selectedFiles = ref([]);
 // onMounted(() => {
 //
 // });
 
 const isDisabled = () => {
-    return isMaterialDefectFree.value === null || arePiecesLabelledCorrectly.value === null || areItemsInTolerance.value === null || selectedFiles.value.length === 0;
+    return hasCorrectNumberOfJoistsProcessed.value === null ||
+        areAnyHolesMissing.value === null ||
+        areAllHolesInCorrectLocation.value === null ||
+        areAllHolesNeatlyCut.value === null ||
+        areAllJoistsLabelled.value === null;
 };
 
 const handleSubmit = () => {
@@ -48,23 +56,35 @@ const handleSelect = (event) => {
             <div class="card flex flex-col gap-8">
                 <div>
                     <div class="font-semibold text-xl flex items-center gap-4 mb-4">
-                        1. Is the material free from defect? <span class="text-base text-gray-500">(20% Moisture content ; straight)</span>
+                        1. Have you processed the correct number of Joists?
                     </div>
-                    <Select v-model="isMaterialDefectFree" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                    <Select v-model="hasCorrectNumberOfJoistsProcessed" :options="dropdownValues" optionLabel="name" placeholder="Select" />
                 </div>
                 <div>
                     <div class="font-semibold text-xl flex items-center gap-4 mb-4">
-                        2. Are all pieces of the cutting list labelled correctly?
+                        2. Are any holes missing?
                     </div>
-                    <div class="font-semibold text-xl"></div>
-                    <Select v-model="arePiecesLabelledCorrectly" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                    <Select v-model="areAnyHolesMissing" :options="dropdownValues" optionLabel="name" placeholder="Select" />
                 </div>
                 <div>
                     <div class="font-semibold text-xl flex items-center gap-4 mb-4">
-                        3. Are all items in tolerance <span class="text-base text-gray-500">(-2+4mm) thickness and width ; (+-1)mm cut length</span>
+                        3. Are all holes in the correct location?
                     </div>
-                    <Select v-model="areItemsInTolerance" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                    <Select v-model="areAllHolesInCorrectLocation" :options="dropdownValues" optionLabel="name" placeholder="Select" />
                 </div>
+                <div>
+                    <div class="font-semibold text-xl flex items-center gap-4 mb-4">
+                        4. Are all holes neatly cut?
+                    </div>
+                    <Select v-model="areAllHolesNeatlyCut" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                </div>
+                <div>
+                    <div class="font-semibold text-xl flex items-center gap-4 mb-4">
+                        5. Are all joists labelled?
+                    </div>
+                    <Select v-model="areAllJoistsLabelled" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                </div>
+
                 <div class="col-span-full lg:col-span-6">
                     <div class="font-semibold text-xl mb-4">Insert image</div>
                     <FileUpload mode="basic" name="demo[]" :multiple="true" accept="image/*" :maxFileSize="1000000" @select="handleSelect" severity="secondary" class="p-button-outlined" />

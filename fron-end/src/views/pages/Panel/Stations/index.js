@@ -6,3 +6,5 @@ export { default as Wek } from './Wek.vue';
 export { default as Saw2 } from './Saw2.vue';
 export { default as Parapet } from './Parapet.vue';
 export { default as Internal } from './Internal.vue';
+export { default as JoistPrep } from './JoistPrep.vue';
+export { default as WindowStation } from './WindowStation.vue';

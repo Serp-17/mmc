@@ -26,13 +26,8 @@ const structuralOpeningLengthAndWidthSecond = ref({
     length: null,
     height: null
 });
-
-const selectedFiles = ref([]);
-const selectedFilesA1 = ref([]);
-// onMounted(() => {
-//
-// });
-
+const insertImageToThisBox = ref([]);
+const insertImageToThisBoxShowingA1 = ref([]);
 const isDisabled = () => {
     return false;
 };
@@ -41,40 +36,33 @@ const handleSubmit = () => {
     toast.add({ severity: 'info', summary: 'Success', detail: 'Uploaded', life: 3000 });
 };
 
-const handleSelect = (event) => {
-    selectedFiles.value = [];
+const handleSelect = (event, name) => {
+    const targetRefs = {
+        insertImageToThisBox,
+        insertImageToThisBoxShowingA1
+    };
 
-    Array.from(event.files).forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            selectedFiles.value.push({
-                file,
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                preview: e.target.result
-            });
-        };
-        reader.readAsDataURL(file);
-    });
-};
+    const targetRef = targetRefs[name];
 
-const handleSelectA1 = (event) => {
-    selectedFilesA1.value = [];
+    if (targetRef) {
+        targetRef.value = []; // Сбрасываем предыдущие значения
 
-    Array.from(event.files).forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            selectedFilesA1.value.push({
-                file,
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                preview: e.target.result
-            });
-        };
-        reader.readAsDataURL(file);
-    });
+        Array.from(event.files).forEach((file) => {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                targetRef.value.push({
+                    file,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    preview: e.target.result
+                });
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
 };
 </script>
 
@@ -149,9 +137,9 @@ const handleSelectA1 = (event) => {
                 </div>
                 <div class="col-span-full lg:col-span-6">
                     <div class="font-semibold text-xl mb-4">Insert image</div>
-                    <FileUpload mode="basic" name="demo[]" :multiple="true" accept="image/*" :maxFileSize="1000000" @select="handleSelect" severity="secondary"  class="p-button-outlined"/>
-                    <div v-if="selectedFiles.length" class="file-preview mt-4">
-                        <div v-for="(file, index) in selectedFiles" :key="index" class="file-item">
+                    <FileUpload mode="basic" name="demo[]" :multiple="true" accept="image/*" :maxFileSize="1000000" @select="(e) => handleSelect(e, 'insertImageToThisBox')" severity="secondary"  class="p-button-outlined"/>
+                    <div v-if="insertImageToThisBox.length" class="file-preview mt-4">
+                        <div v-for="(file, index) in insertImageToThisBox" :key="index" class="file-item">
                             <div v-if="file.preview">
                                 <img :src="file.preview" alt="Preview" class="file-image" />
                             </div>
@@ -160,9 +148,9 @@ const handleSelectA1 = (event) => {
                 </div>
                 <div class="col-span-full lg:col-span-6">
                     <div class="font-semibold text-xl mb-4">Insert image of A1 board fitted to this box</div>
-                    <FileUpload mode="basic" name="demo[]" :multiple="true" accept="image/*" :maxFileSize="1000000" @select="handleSelectA1" severity="secondary" class="p-button-outlined" />
-                    <div v-if="selectedFilesA1.length" class="file-preview mt-4">
-                        <div v-for="(file, index) in selectedFilesA1" :key="index" class="file-item">
+                    <FileUpload mode="basic" name="demo[]" :multiple="true" accept="image/*" :maxFileSize="1000000" @select="(e) => handleSelect(e, 'insertImageToThisBoxShowingA1')" severity="secondary" class="p-button-outlined" />
+                    <div v-if="insertImageToThisBoxShowingA1.length" class="file-preview mt-4">
+                        <div v-for="(file, index) in insertImageToThisBoxShowingA1" :key="index" class="file-item">
                             <div v-if="file.preview">
                                 <img :src="file.preview" alt="Preview" class="file-image" />
                             </div>

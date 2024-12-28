@@ -7,13 +7,11 @@ const dropdownValues = ref([
     { name: 'Yes', value: 'yes' },
     { name: 'No', code: 'no' }
 ]);
-const areOverhangsAndUnderhangsCorrect = ref(null);; // Значение по умолчанию
-const isFrameWithinSpecification = ref(null);;
-
-const selectedFiles = ref([]);
-// onMounted(() => {
-//
-// });
+const areOverhangsAndUnderhangsCorrect = ref(null);
+const isFrameWithinSpecification = ref(null);
+const insertImageToThisBoxShowingInsulatedVoids = ref([]);
+const insertImageToThisBoxShowingWindowOpeningTapingOfPanel = ref([]);
+const insertImageToThisBoxShowingA1BoardFitted = ref([]);
 
 const isDisabled = () => {
     return areOverhangsAndUnderhangsCorrect.value === null || isFrameWithinSpecification.value === null;
@@ -23,22 +21,34 @@ const handleSubmit = () => {
     toast.add({ severity: 'info', summary: 'Success', detail: 'Uploaded', life: 3000 });
 };
 
-const handleSelect = (event) => {
-    selectedFiles.value = [];
+const handleSelect = (event, name) => {
+    const targetRefs = {
+        insertImageToThisBoxShowingInsulatedVoids,
+        insertImageToThisBoxShowingWindowOpeningTapingOfPanel,
+        insertImageToThisBoxShowingA1BoardFitted
+    };
 
-    Array.from(event.files).forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            selectedFiles.value.push({
-                file,
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                preview: e.target.result
-            });
-        };
-        reader.readAsDataURL(file);
-    });
+    const targetRef = targetRefs[name];
+
+    if (targetRef) {
+        targetRef.value = []; // Сбрасываем предыдущие значения
+
+        Array.from(event.files).forEach((file) => {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                targetRef.value.push({
+                    file,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    preview: e.target.result
+                });
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
 };
 </script>
 
@@ -67,12 +77,12 @@ const handleSelect = (event) => {
                         :multiple="true"
                         accept="image/*"
                         :maxFileSize="1000000"
-                        @select="handleSelect"
+                        @select="(e) => handleSelect(e, 'insertImageToThisBoxShowingInsulatedVoids')"
                         severity="secondary"
                         class="p-button-outlined"
                     />
-                    <div v-if="selectedFiles.length" class="file-preview mt-4">
-                        <div v-for="(file, index) in selectedFiles" :key="index" class="file-item">
+                    <div v-if="insertImageToThisBoxShowingInsulatedVoids.length" class="file-preview mt-4">
+                        <div v-for="(file, index) in insertImageToThisBoxShowingInsulatedVoids" :key="index" class="file-item">
                             <div v-if="file.preview">
                                 <img :src="file.preview" alt="Preview" class="file-image" />
                             </div>
@@ -87,12 +97,12 @@ const handleSelect = (event) => {
                         :multiple="true"
                         accept="image/*"
                         :maxFileSize="1000000"
-                        @select="handleSelect"
+                        @select="(e) => handleSelect(e, 'insertImageToThisBoxShowingWindowOpeningTapingOfPanel')"
                         severity="secondary"
                         class="p-button-outlined"
                     />
-                    <div v-if="selectedFiles.length" class="file-preview mt-4">
-                        <div v-for="(file, index) in selectedFiles" :key="index" class="file-item">
+                    <div v-if="insertImageToThisBoxShowingWindowOpeningTapingOfPanel.length" class="file-preview mt-4">
+                        <div v-for="(file, index) in insertImageToThisBoxShowingWindowOpeningTapingOfPanel" :key="index" class="file-item">
                             <div v-if="file.preview">
                                 <img :src="file.preview" alt="Preview" class="file-image" />
                             </div>
@@ -107,12 +117,12 @@ const handleSelect = (event) => {
                         :multiple="true"
                         accept="image/*"
                         :maxFileSize="1000000"
-                        @select="handleSelect"
+                        @select="(e) => handleSelect(e, 'insertImageToThisBoxShowingA1BoardFitted')"
                         severity="secondary"
                         class="p-button-outlined"
                     />
-                    <div v-if="selectedFiles.length" class="file-preview mt-4">
-                        <div v-for="(file, index) in selectedFiles" :key="index" class="file-item">
+                    <div v-if="insertImageToThisBoxShowingA1BoardFitted.length" class="file-preview mt-4">
+                        <div v-for="(file, index) in insertImageToThisBoxShowingA1BoardFitted" :key="index" class="file-item">
                             <div v-if="file.preview">
                                 <img :src="file.preview" alt="Preview" class="file-image" />
                             </div>

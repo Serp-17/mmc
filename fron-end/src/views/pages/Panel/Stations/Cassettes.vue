@@ -15,10 +15,9 @@ const twoAxisMeasurements = ref({
 const isCassetteSquare = ref(null);
 const areJoistHangersInCorrectLocation = ref(null);
 const isGlueAboveAllBoardJoints = ref(null);
-const selectedFiles = ref([]);
-// onMounted(() => {
-//
-// });
+const insertImageBeforeDecking = ref([]);
+const insertImageWithDecking = ref([]);
+const insertImageWithA1Board = ref([]);
 
 const isDisabled = () => {
     return isCassetteSquare.value === null ||
@@ -30,22 +29,34 @@ const handleSubmit = () => {
     toast.add({severity: 'info', summary: 'Success', detail: 'Uploaded', life: 3000});
 };
 
-const handleSelect = (event) => {
-    selectedFiles.value = [];
+const handleSelect = (event, name) => {
+    const targetRefs = {
+        insertImageBeforeDecking,
+        insertImageWithDecking,
+        insertImageWithA1Board
+    };
 
-    Array.from(event.files).forEach((file) => {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-            selectedFiles.value.push({
-                file,
-                name: file.name,
-                size: file.size,
-                type: file.type,
-                preview: e.target.result
-            });
-        };
-        reader.readAsDataURL(file);
-    });
+    const targetRef = targetRefs[name];
+
+    if (targetRef) {
+        targetRef.value = []; // Сбрасываем предыдущие значения
+
+        Array.from(event.files).forEach((file) => {
+            const reader = new FileReader();
+
+            reader.onload = (e) => {
+                targetRef.value.push({
+                    file,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                    preview: e.target.result
+                });
+            };
+
+            reader.readAsDataURL(file);
+        });
+    }
 };
 </script>
 
@@ -93,9 +104,9 @@ const handleSelect = (event) => {
                 <div class="col-span-full lg:col-span-6">
                     <div class="font-semibold text-xl mb-4">Insert image before decking</div>
                     <FileUpload mode="basic" name="demo[]" :multiple="true" accept="image/*" :maxFileSize="1000000"
-                                @select="handleSelect" severity="secondary" class="p-button-outlined"/>
-                    <div v-if="selectedFiles.length" class="file-preview mt-4">
-                        <div v-for="(file, index) in selectedFiles" :key="index" class="file-item">
+                                @select="(e) => handleSelect(e, 'insertImageBeforeDecking')" severity="secondary" class="p-button-outlined"/>
+                    <div v-if="insertImageBeforeDecking.length" class="file-preview mt-4">
+                        <div v-for="(file, index) in insertImageBeforeDecking" :key="index" class="file-item">
                             <div v-if="file.preview">
                                 <img :src="file.preview" alt="Preview" class="file-image"/>
                             </div>
@@ -106,9 +117,9 @@ const handleSelect = (event) => {
                 <div class="col-span-full lg:col-span-6">
                     <div class="font-semibold text-xl mb-4">Insert image with decking</div>
                     <FileUpload mode="basic" name="demo[]" :multiple="true" accept="image/*" :maxFileSize="1000000"
-                                @select="handleSelect" severity="secondary" class="p-button-outlined"/>
-                    <div v-if="selectedFiles.length" class="file-preview mt-4">
-                        <div v-for="(file, index) in selectedFiles" :key="index" class="file-item">
+                                @select="(e) => handleSelect(e, 'insertImageWithDecking')" severity="secondary" class="p-button-outlined"/>
+                    <div v-if="insertImageWithDecking.length" class="file-preview mt-4">
+                        <div v-for="(file, index) in insertImageWithDecking" :key="index" class="file-item">
                             <div v-if="file.preview">
                                 <img :src="file.preview" alt="Preview" class="file-image"/>
                             </div>
@@ -119,9 +130,9 @@ const handleSelect = (event) => {
                 <div class="col-span-full lg:col-span-6">
                     <div class="font-semibold text-xl mb-4">Insert image with A1 Board</div>
                     <FileUpload mode="basic" name="demo[]" :multiple="true" accept="image/*" :maxFileSize="1000000"
-                                @select="handleSelect" severity="secondary" class="p-button-outlined"/>
-                    <div v-if="selectedFiles.length" class="file-preview mt-4">
-                        <div v-for="(file, index) in selectedFiles" :key="index" class="file-item">
+                                @select="(e) => handleSelect(e, 'insertImageWithA1Board')" severity="secondary" class="p-button-outlined"/>
+                    <div v-if="insertImageWithA1Board.length" class="file-preview mt-4">
+                        <div v-for="(file, index) in insertImageWithA1Board" :key="index" class="file-item">
                             <div v-if="file.preview">
                                 <img :src="file.preview" alt="Preview" class="file-image"/>
                             </div>

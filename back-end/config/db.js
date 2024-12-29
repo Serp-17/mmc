@@ -11,8 +11,6 @@ const connection = mysql.createConnection({
 connection.connect((err) => {
     if (err) {
         console.error("Error connecting to MySQL:", err.message);
-    } else {
-        console.log("Connected to MySQL database");
     }
 });
 
@@ -33,7 +31,6 @@ const createUsersTable = `
 
 connection.query(createUsersTable, (err) => {
     if (err) console.error("Error creating users table:", err.message);
-    else console.log("Users table created or already exists");
 });
 
 const createRolesTable = `
@@ -44,7 +41,6 @@ const createRolesTable = `
 
 connection.query(createRolesTable, (err) => {
     if (err) console.error("Error creating roles table:", err.message);
-    else console.log("Roles table created or already exists");
 });
 
 const createUserRoles = `
@@ -58,7 +54,6 @@ CREATE TABLE IF NOT EXISTS user_roles (
 
 connection.query(createUserRoles, (err) => {
     if (err) console.error("Error creating user_roles table:", err.message);
-    else console.log("User_roles table created or already exists");
 });
 
 const createItems = `
@@ -71,7 +66,6 @@ CREATE TABLE IF NOT EXISTS items (
 
 connection.query(createItems, (err) => {
     if (err) console.error("Error creating Items table:", err.message);
-    else console.log("Items table created or already exists");
 });
 
 const createTransactions = `
@@ -90,7 +84,6 @@ CREATE TABLE IF NOT EXISTS transactions (
 
 connection.query(createTransactions, (err) => {
     if (err) console.error("Error creating Transactions table:", err.message);
-    else console.log("Transactions table created or already exists");
 });
 
 const createVolumesTable = `
@@ -108,7 +101,6 @@ const createVolumesTable = `
 
 connection.query(createVolumesTable, (err) => {
     if (err) console.error("Error creating volumes table:", err.message);
-    else console.log("Volumes table created or already exists");
 });
 
 const createPanelsTable = `
@@ -116,7 +108,7 @@ const createPanelsTable = `
         id INT AUTO_INCREMENT PRIMARY KEY,
         volume_id INT NOT NULL,
         name VARCHAR(100) NOT NULL,
-        tracking_number VARCHAR(100),
+        tracking_number VARCHAR(100) UNIQUE,
         link JSON,
         status ENUM('null', 'in progress', 'qa', 'done') DEFAULT 'null',
         type ENUM('FC', 'EP', 'IP', 'RC', 'RU', 'PP', 'PW') NOT NULL,
@@ -131,7 +123,6 @@ const createPanelsTable = `
 
 connection.query(createPanelsTable, (err) => {
     if (err) console.error("Error creating panels table:", err.message);
-    else console.log("Panels table created or already exists");
 });
 
 module.exports = connection;

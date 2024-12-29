@@ -1,12 +1,22 @@
 <script setup>
 import { BFly, Info, Internal, Cassettes, Saw1, Saw2, Wek, Parapet, JoistPrep, WindowStation } from './Stations';
-import { onMounted, ref } from 'vue';
+import { computed, onMounted, ref, watch } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
-const { query } = useRoute();
+const { query, params } = useRoute();
 const router = useRouter();
 const stations = ['Info', 'Saw1', 'Saw2', 'Wek', 'B-Fly', 'Joist Prep', 'Cassettes', 'Window Station', 'Internal', 'Parapet'];
 const station = ref(null);
+const store = useStore();
+
+const panel = computed(() => store.getters['panels/getPanel']);
+
+const breadcrumbHome = ref({ icon: 'pi pi-home', to: '/' });
+const breadcrumbItems = computed(() => {
+    if (!panel.value) return [];
+    return [{ label: 'Volume', url: `/volumes/${panel.value.volume_id}` }, { label: 'Panels', url: `/panels/${panel.value.volume_id}` }, { label: 'Panels name' }];
+});
 
 const selectPage = (str) => {
     station.value = str;
@@ -23,20 +33,35 @@ onMounted(() => {
     } else if (station.value === null) {
         station.value = stations[0];
     }
+    store.dispatch('panels/fetchPanelById', params.id);
+});
+
+watch(panel, (newPanel) => {
+    if (!newPanel) {
+        console.warn('Panel data is not loaded yet.');
+    }
 });
 </script>
 
 <template>
-    <div class="card">
-        <div class="font-semibold text-xl mb-4">Panel - EP3333 <span class="text-gray-400">( RO000 )</span></div>
+    <Breadcrumb :home="breadcrumbHome" :model="breadcrumbItems"/>
+    <div class="card mt-8">
+        <div class="font-semibold text-xl mb-4">
+            Panel - {{ panel?.name || 'Loading...' }}
+            <span class="text-gray-400">( {{ panel?.tracking_number || '...' }} )</span>
+        </div>
+
         <Tabs :value="station">
             <TabList>
-                <Tab v-for="item in stations" :key="item" :value="item" @click="selectPage(item)">{{ item }}</Tab>
+                <Tab v-for="item in stations" :key="item" :value="item" @click="selectPage(item)">
+                    {{ item }}
+                </Tab>
             </TabList>
         </Tabs>
     </div>
-    <div>
-        <Info v-if="station === 'Info'" />
+
+    <div v-if="panel">
+        <Info v-if="station === 'Info'" :panel_status="panel.status" :links="panel.link" />
         <Saw1 v-if="station === 'Saw1'" />
         <Saw2 v-if="station === 'Saw2'" />
         <Wek v-if="station === 'Wek'" />

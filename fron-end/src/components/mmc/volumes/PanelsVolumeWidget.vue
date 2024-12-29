@@ -15,7 +15,7 @@ const { params } = useRoute();
     <div class="card">
         <div class="font-semibold text-xl mb-4 flex justify-between items-center">
             <p>Panels in progress</p>
-            <Button as="router-link" label="All panels" class="p-button-link" :to="`/panels/${ params.id }`" />
+            <Button as="router-link" label="All panels" class="p-button-link" :to="`/panels/${params.id}`" />
         </div>
         <DataTable :value="props.panels" :rows="5" :paginator="true" responsiveLayout="scroll">
             <Column field="name" header="Name" :sortable="true" style="width: 35%"></Column>
@@ -27,7 +27,7 @@ const { params } = useRoute();
             </Column>
             <Column style="width: 15%" header="View">
                 <template #body>
-                    <Button as="router-link" :to="`/panel/${1}`" icon="pi pi-search" type="button" class="p-button-text"></Button>
+                    <Button as="router-link" :to="`/panel/${1}`" icon="pi pi-eye" type="button" class="p-button-text"></Button>
                 </template>
             </Column>
         </DataTable>

@@ -1,5 +1,17 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { ref, defineProps, onMounted } from 'vue';
+
+const props = defineProps({
+    panel_status: {
+        type: String,
+        default: null
+    },
+    links: {
+        type: Array,
+        // eslint-disable-next-line vue/require-valid-default-prop
+        default: []
+    }
+});
 const menu = ref(null);
 
 const items = ref([
@@ -8,21 +20,21 @@ const items = ref([
 ]);
 const dropdownStatus = ref(['in progress', 'qa', 'done']);
 const status = ref(null);
+
+onMounted(() => {
+    status.value = props.panel_status;
+});
 </script>
 
 <template>
     <div class="grid grid-cols-2 gap-8">
         <div class="card mb-0 grid gap-6">
             <div class="font-semibold text-xl">Info</div>
-
             <div class="flex justify-start items-center gap-6">
-                <div class="font-semibold text-lg flex items-center">
-                    Status
-                </div>
+                <div class="font-semibold text-lg flex items-center">Status</div>
                 <Select v-model="status" :options="dropdownStatus" placeholder="Select" />
             </div>
-            <hr>
-
+            <hr />
             <div class="">
                 <div class="flex items-center justify-between mb-6">
                     <div class="font-semibold text-xl">Notifications</div>
@@ -40,9 +52,9 @@ const status = ref(null);
                             <i class="pi pi-dollar !text-xl text-blue-500"></i>
                         </div>
                         <span class="text-surface-900 dark:text-surface-0 leading-normal"
-                        >Richard Jones
-                    <span class="text-surface-700 dark:text-surface-100">has purchased a blue t-shirt for <span class="text-primary font-bold">$79.00</span></span>
-                </span>
+                            >Richard Jones
+                            <span class="text-surface-700 dark:text-surface-100">has purchased a blue t-shirt for <span class="text-primary font-bold">$79.00</span></span>
+                        </span>
                     </li>
                     <li class="flex items-center py-2">
                         <div class="w-12 h-12 flex items-center justify-center bg-orange-100 dark:bg-orange-400/10 rounded-full mr-4 shrink-0">
@@ -59,18 +71,18 @@ const status = ref(null);
                             <i class="pi pi-dollar !text-xl text-blue-500"></i>
                         </div>
                         <span class="text-surface-900 dark:text-surface-0 leading-normal"
-                        >Keyser Wick
-                    <span class="text-surface-700 dark:text-surface-100">has purchased a black jacket for <span class="text-primary font-bold">$59.00</span></span>
-                </span>
+                            >Keyser Wick
+                            <span class="text-surface-700 dark:text-surface-100">has purchased a black jacket for <span class="text-primary font-bold">$59.00</span></span>
+                        </span>
                     </li>
                     <li class="flex items-center py-2 border-b border-surface">
                         <div class="w-12 h-12 flex items-center justify-center bg-pink-100 dark:bg-pink-400/10 rounded-full mr-4 shrink-0">
                             <i class="pi pi-question !text-xl text-pink-500"></i>
                         </div>
                         <span class="text-surface-900 dark:text-surface-0 leading-normal"
-                        >Jane Davis
-                    <span class="text-surface-700 dark:text-surface-100">has posted a new questions about your product.</span>
-                </span>
+                            >Jane Davis
+                            <span class="text-surface-700 dark:text-surface-100">has posted a new questions about your product.</span>
+                        </span>
                     </li>
                 </ul>
                 <span class="block text-muted-color font-medium mb-4">LAST WEEK</span>
@@ -89,15 +101,16 @@ const status = ref(null);
                     </li>
                 </ul>
             </div>
-
         </div>
         <div class="card">
             <div class="font-semibold text-xl mb-4">Links</div>
             <div class="grid gap-6">
-                <InputGroup>
-                    <InputText />
+                <InputGroup v-for="(item, index) in links" :key="index">
+                    <InputText :value="item" />
                     <InputGroupAddon class="cursor-pointer">
-                        <i class="pi pi-external-link"></i>
+                        <a target="_blank" :href="item">
+                            <i class="pi pi-external-link"></i>
+                        </a>
                     </InputGroupAddon>
                     <InputGroupAddon class="cursor-pointer">
                         <i class="pi pi-copy"></i>

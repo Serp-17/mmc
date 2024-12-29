@@ -2,11 +2,15 @@
 import { ref, onMounted, computed } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
+import {useToast} from "primevue/usetoast";
 
+const { params } = useRoute();
 const store = useStore();
 const breadcrumbHome = ref({ icon: 'pi pi-home', to: '/' });
-const breadcrumbItems = ref([{ label: 'Volume name', url: '/volumes/1' }, { label: 'Panels' }]);
+const breadcrumbItems = ref([{ label: 'Volume', url: `/volumes/${params.id}` }, { label: 'Panels' }]);
 const loading = ref(true);
+
 const panels = computed(() => store.getters['panels/getPanels']);
 
 const filters = ref({
@@ -18,7 +22,23 @@ const filters = ref({
     status: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 
-const statuses = ['null', 'done', 'qa', 'In progress'];
+const statuses = ['done', 'qa', 'In progress'];
+const display = ref(false);
+const selectedId = ref(null);
+const modelSelect = ref(null);
+
+const open = (id) => {
+    const status = panels.value.find((item) => item.id === id).status;
+    selectedId.value = id;
+    modelSelect.value = status;
+    display.value = true;
+};
+
+const close = () => {
+    selectedId.value = null;
+    modelSelect.value = null;
+    display.value = false;
+};
 
 const getSeverity = (status) => {
     switch (status) {
@@ -36,12 +56,24 @@ const getSeverity = (status) => {
 };
 
 onMounted(() => {
-    store.dispatch('panels/fetchPanels', 1).then(() => (loading.value = false));
+    store.dispatch('panels/fetchPanels', params.id).then(() => (loading.value = false));
 });
 </script>
 
 <template>
     <Breadcrumb :home="breadcrumbHome" :model="breadcrumbItems" />
+
+    <Dialog header="Change status" v-model:visible="display" :breakpoints="{ '960px': '75vw' }" :style="{ width: '30vw' }" :modal="true">
+        <Select v-model="modelSelect" :options="statuses" class="w-full uppercase">
+            <template #option="slotProps">
+                <Tag :value="slotProps.option" :severity="getSeverity(slotProps.option)" class="uppercase" />
+            </template>
+        </Select>
+        <template #footer>
+            <Button label="Save" @click="close" class="w-full" />
+        </template>
+    </Dialog>
+
     <div class="card mt-8">
         <DataTable v-model:filters="filters" :value="panels" paginator :rows="10" dataKey="id" filterDisplay="row" :loading="loading" :globalFilterFields="['name', 'tracking_number']">
             <template #header>
@@ -66,7 +98,7 @@ onMounted(() => {
                     {{ data.id }}
                 </template>
             </Column>
-            <Column field="name" header="Panel Name" style="min-width: 12rem">
+            <Column field="name" header="Panel Name" >
                 <template #body="{ data }">
                     {{ data.name }}
                 </template>
@@ -74,7 +106,7 @@ onMounted(() => {
                     <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by name" />
                 </template>
             </Column>
-            <Column field="tracking_number" header="Tracking Number" style="min-width: 12rem">
+            <Column field="tracking_number" header="Tracking Number" >
                 <template #body="{ data }">
                     {{ data.tracking_number }}
                 </template>
@@ -82,7 +114,7 @@ onMounted(() => {
                     <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by name" />
                 </template>
             </Column>
-            <Column field="date_completed" header="Date Completed" style="min-width: 12rem">
+            <Column field="date_completed" header="Date Completed" >
                 <template #body="{ data }">
                     {{ data.date_completed }}
                 </template>
@@ -90,7 +122,7 @@ onMounted(() => {
                     <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by name" />
                 </template>
             </Column>
-            <Column field="date_shipped" header="Date Shipped" style="min-width: 12rem">
+            <Column field="date_shipped" header="Date Shipped">
                 <template #body="{ data }">
                     {{ data.date_shipped }}
                 </template>
@@ -98,16 +130,21 @@ onMounted(() => {
                     <InputText v-model="filterModel.value" type="text" @input="filterCallback()" placeholder="Search by name" />
                 </template>
             </Column>
-            <Column field="status" header="Status" :showFilterMenu="false" style="min-width: 12rem">
+            <Column field="status" header="Status" :showFilterMenu="false" >
                 <template #body="{ data }">
-                    <Tag class="uppercase" :value="data.status" :severity="getSeverity(data.status)" />
+                    <Tag class="uppercase" :value="data.status" :severity="getSeverity(data.status)" @click="open(data.id)" />
                 </template>
                 <template #filter="{ filterModel, filterCallback }">
-                    <Select v-model="filterModel.value" @change="filterCallback()" :options="statuses" placeholder="Select One" style="min-width: 12rem" :showClear="true">
+                    <Select v-model="filterModel.value" @change="filterCallback()" :options="statuses" placeholder="Select One" :showClear="true">
                         <template #option="slotProps">
                             <Tag :value="slotProps.option" :severity="getSeverity(slotProps.option)" />
                         </template>
                     </Select>
+                </template>
+            </Column>
+            <Column style="width: 15%" header="View">
+                <template #body="{ data }">
+                    <Button as="router-link" :to="`/panel/${data.id}`" icon="pi pi-eye" type="button" class="p-button-text"></Button>
                 </template>
             </Column>
         </DataTable>

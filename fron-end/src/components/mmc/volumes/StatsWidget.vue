@@ -1,16 +1,31 @@
+<script setup>
+import { defineProps } from 'vue';
+
+const props = defineProps({
+    totalPanels: {
+        type: String || Number,
+        default: 0
+    },
+    panelDone: {
+        type: String || Number,
+        default: 0
+    }
+});
+</script>
+
 <template>
     <div class="col-span-12 lg:col-span-6 xl:col-span-3">
         <div class="card mb-0">
             <div class="flex justify-between mb-4">
                 <div>
                     <span class="block text-muted-color font-medium mb-4">Panels</span>
-                    <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">152</div>
+                    <div class="text-surface-900 dark:text-surface-0 font-medium text-xl">{{ props.totalPanels }}</div>
                 </div>
                 <div class="flex items-center justify-center bg-blue-100 dark:bg-blue-400/10 rounded-border" style="width: 2.5rem; height: 2.5rem">
-                    <i class="pi pi-shopping-cart text-blue-500 !text-xl"></i>
+                    <i class="pi pi-objects-column text-blue-500 !text-xl"></i>
                 </div>
             </div>
-            <span class="text-primary font-medium">100 done</span>
+            <span class="text-primary font-medium">{{ props.panelDone }} done</span>
         </div>
     </div>
     <div class="col-span-12 lg:col-span-6 xl:col-span-3">
@@ -59,5 +74,3 @@
         </div>
     </div>
 </template>
-<script setup lang="ts">
-</script>

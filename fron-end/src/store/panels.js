@@ -5,7 +5,8 @@ export default {
     state: () => ({
         panels: [],
         in_progress_panels: [],
-        panels_statistic: null
+        panels_statistic: null,
+        panel: null
     }),
     mutations: {
         setPanels(state, panels) {
@@ -16,12 +17,15 @@ export default {
         },
         setPanelsStatistic(state, statistic) {
             state.panels_statistic = statistic;
+        },
+        setPanel(state, panel) {
+            state.panel = panel;
         }
     },
     actions: {
         async fetchPanels({ commit }, id) {
             try {
-                const res = await panelsService.getPanels(id);
+                const res = await panelsService.getPanelsById(id);
                 commit('setPanels', res.data);
             } catch (err) {
                 console.error('Error fetching storage:', err);
@@ -30,8 +34,11 @@ export default {
         },
         async fetchInProgressPanels({ commit }, id) {
             try {
-                const res = await panelsService.getInProgressPanels(id);
-                commit('setInProgressPanels', res.data);
+                const res = await panelsService.getPanelsById(id);
+                commit(
+                    'setInProgressPanels',
+                    res.data.filter((item) => item.status === 'in progress')
+                );
             } catch (err) {
                 console.error('Error fetching storage:', err);
                 commit('setInProgressPanels', []);
@@ -45,6 +52,15 @@ export default {
                 console.error('Error fetching storage:', err);
                 commit('setPanelsStatistic', []);
             }
+        },
+        async fetchPanelById({ commit }, id) {
+            try {
+                const res = await panelsService.getPanelById(id);
+                commit('setPanel', res.data);
+            } catch (err) {
+                console.error('Error fetching storage:', err);
+                commit('setPanel', null);
+            }
         }
     },
     getters: {
@@ -56,6 +72,9 @@ export default {
         },
         getPanelsStatistic(state) {
             return state.panels_statistic;
+        },
+        getPanel(state) {
+            return state.panel;
         }
     }
 };

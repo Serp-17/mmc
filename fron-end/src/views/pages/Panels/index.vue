@@ -3,10 +3,11 @@ import { ref, onMounted, computed } from 'vue';
 import { FilterMatchMode } from '@primevue/core/api';
 import { useStore } from 'vuex';
 import { useRoute } from 'vue-router';
-import {useToast} from "primevue/usetoast";
+import { useToast } from 'primevue/usetoast';
 
 const { params } = useRoute();
 const store = useStore();
+const toast = useToast();
 const breadcrumbHome = ref({ icon: 'pi pi-home', to: '/' });
 const breadcrumbItems = ref([{ label: 'Volume', url: `/volumes/${params.id}` }, { label: 'Panels' }]);
 const loading = ref(true);
@@ -22,7 +23,7 @@ const filters = ref({
     status: { value: null, matchMode: FilterMatchMode.EQUALS }
 });
 
-const statuses = ['done', 'qa', 'In progress'];
+const statuses = ['done', 'qa', 'in progress'];
 const display = ref(false);
 const selectedId = ref(null);
 const modelSelect = ref(null);
@@ -32,12 +33,6 @@ const open = (id) => {
     selectedId.value = id;
     modelSelect.value = status;
     display.value = true;
-};
-
-const close = () => {
-    selectedId.value = null;
-    modelSelect.value = null;
-    display.value = false;
 };
 
 const getSeverity = (status) => {
@@ -55,6 +50,19 @@ const getSeverity = (status) => {
     }
 };
 
+const editStatus = () => {
+    const data = {
+        status: modelSelect.value
+    };
+    store.dispatch('panels/putPanel', { id: selectedId.value, data: data }).then(() => {
+        store.dispatch('panels/fetchPanels', params.id).then(() => (loading.value = false));
+        selectedId.value = null;
+        modelSelect.value = null;
+        display.value = false;
+        toast.add({ severity: 'success', summary: 'Successful', detail: 'Status update', life: 3000 });
+    });
+};
+
 onMounted(() => {
     store.dispatch('panels/fetchPanels', params.id).then(() => (loading.value = false));
 });
@@ -70,7 +78,7 @@ onMounted(() => {
             </template>
         </Select>
         <template #footer>
-            <Button label="Save" @click="close" class="w-full" />
+            <Button label="Save" @click="editStatus" class="w-full" />
         </template>
     </Dialog>
 

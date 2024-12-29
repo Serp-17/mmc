@@ -61,6 +61,15 @@ export default {
                 console.error('Error fetching storage:', err);
                 commit('setPanel', null);
             }
+        },
+        async putPanel({ commit }, { id, data }) {
+            try {
+                const res = await panelsService.putPanel(id, data);
+                commit('setPanel', res.data);
+            } catch (err) {
+                console.error('Error fetching storage:', err);
+                commit('setPanel', null);
+            }
         }
     },
     getters: {

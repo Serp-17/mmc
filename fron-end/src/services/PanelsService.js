@@ -11,5 +11,8 @@ export const panelsService = {
     },
     async getPanelById(id) {
         return await axiosWithAuth.get(`${URL_AUTH}/panel/${id}`);
+    },
+    async putPanel(id, data) {
+        return await axiosWithAuth.put(`${URL_AUTH}/${id}`, data);
     }
 };

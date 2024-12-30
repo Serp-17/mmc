@@ -21,6 +21,7 @@ export default {
             }
         },
         async postStation({ commit }, { id_panel, station, data }) {
+            console.log(id_panel, station, data)
             try {
                 const res = await stationsService.postStation(id_panel, station, data);
                 commit('setStation', res.data);

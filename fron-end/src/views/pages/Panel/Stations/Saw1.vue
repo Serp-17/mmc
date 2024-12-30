@@ -1,5 +1,5 @@
 <script setup>
-import { defineProps, ref } from 'vue';
+import { defineProps, ref, onMounted } from 'vue';
 import { useStore } from 'vuex';
 import { useToast } from 'primevue/usetoast';
 
@@ -9,7 +9,6 @@ const props = defineProps({
         default: 0
     }
 });
-
 const store = useStore();
 const toast = useToast();
 const dropdownValues = ref([
@@ -20,12 +19,13 @@ const isMaterialDefectFree = ref(null);
 const arePiecesLabelledCorrectly = ref(null);
 const areItemsInTolerance = ref(null);
 const selectedFiles = ref([]);
-// onMounted(() => {
-//
-// });
+onMounted(() => {
+
+});
 
 const isDisabled = () => {
-    return isMaterialDefectFree.value === null || arePiecesLabelledCorrectly.value === null || areItemsInTolerance.value === null;
+    return false
+    // return isMaterialDefectFree.value === null || arePiecesLabelledCorrectly.value === null || areItemsInTolerance.value === null;
 };
 
 const handleSubmit = () => {
@@ -34,7 +34,9 @@ const handleSubmit = () => {
         id_panel: props.id_panel,
         station: 'Saw1',
         data: {
-            test: 'test'
+            isMaterialDefectFree: isMaterialDefectFree.value,
+            arePiecesLabelledCorrectly: areItemsInTolerance.value,
+            areItemsInTolerance: areItemsInTolerance.value
         }
     });
 };

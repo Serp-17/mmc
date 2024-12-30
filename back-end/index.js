@@ -9,6 +9,7 @@ const storageRoutes = require("./routes/storageRouter");
 const transactionRoutes = require("./routes/transactionRoutes");
 const volumeRouter = require("./routes/volumeRouter");
 const panelRouter = require("./routes/panelRouter");
+const stationsRouter = require("./routes/stationsRoutes");
 
 dotenv.config();
 
@@ -28,6 +29,7 @@ app.use("/storage", storageRoutes);
 app.use("/transactions", transactionRoutes);
 app.use("/volumes", volumeRouter);
 app.use("/panels", panelRouter);
+app.use("/stations", stationsRouter);
 
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {

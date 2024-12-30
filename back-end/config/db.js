@@ -126,7 +126,7 @@ connection.query(createPanelsTable, (err) => {
 });
 
 const createStationsTable = `
-    CREATE TABLE stations (
+    CREATE TABLE IF NOT EXISTS stations (
         id INT AUTO_INCREMENT PRIMARY KEY,
         volume_id INT NOT NULL,
         user_id INT DEFAULT NULL,

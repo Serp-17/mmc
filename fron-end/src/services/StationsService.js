@@ -8,5 +8,10 @@ export const stationsService = {
             id_panel,
             station
         });
+    },
+    async postStation(id_panel, station, data) {
+
+        console.log(id_panel, station, data)
+        // return await axiosWithAuth.post(`${URL_AUTH}/`);
     }
 };

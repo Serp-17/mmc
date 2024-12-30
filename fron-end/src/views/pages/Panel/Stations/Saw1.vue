@@ -1,7 +1,16 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import { defineProps, ref } from 'vue';
+import { useStore } from 'vuex';
 import { useToast } from 'primevue/usetoast';
 
+const props = defineProps({
+    id_panel: {
+        type: String || Number,
+        default: 0
+    }
+});
+
+const store = useStore();
 const toast = useToast();
 const dropdownValues = ref([
     { name: 'Yes', value: 'yes' },
@@ -16,11 +25,18 @@ const selectedFiles = ref([]);
 // });
 
 const isDisabled = () => {
-    return isMaterialDefectFree.value === null || arePiecesLabelledCorrectly.value === null || areItemsInTolerance.value === null || selectedFiles.value.length === 0;
+    return isMaterialDefectFree.value === null || arePiecesLabelledCorrectly.value === null || areItemsInTolerance.value === null;
 };
 
 const handleSubmit = () => {
     toast.add({ severity: 'info', summary: 'Success', detail: 'Uploaded', life: 3000 });
+    store.dispatch('stations/postStation', {
+        id_panel: props.id_panel,
+        station: 'Saw1',
+        data: {
+            test: 'test'
+        }
+    });
 };
 
 const handleSelect = (event) => {

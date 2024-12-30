@@ -82,8 +82,8 @@ const editStatus = () => {
                 </template>
             </Column>
             <Column style="width: 15%" header="View">
-                <template #body>
-                    <Button as="router-link" :to="`/panel/${1}`" icon="pi pi-eye" type="button" class="p-button-text"></Button>
+                <template #body="{ data }">
+                    <Button as="router-link" :to="`/panel/${data.id}`" icon="pi pi-eye" type="button" class="p-button-text"></Button>
                 </template>
             </Column>
         </DataTable>

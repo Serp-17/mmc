@@ -17,15 +17,15 @@ export default defineConfig({
             resolvers: [PrimeVueResolver()]
         }),
         VitePWA({
-            registerType: 'autoUpdate', // Автоматическое обновление PWA
+            registerType: 'autoUpdate',
             manifest: {
-                name: 'My Vite PWA App', // Название приложения
-                short_name: 'VitePWA', // Короткое название
-                description: 'My awesome Vite PWA app!',
-                theme_color: '#4DBA87', // Цвет темы
-                background_color: '#ffffff', // Цвет фона
-                display: 'standalone', // Открытие как отдельное приложение
-                start_url: '/', // Стартовый URL
+                name: 'CITU MMC',
+                short_name: 'CITU MMC',
+                description: 'CITU MMC app',
+                theme_color: '#4DBA87',
+                background_color: '#ffffff',
+                display: 'standalone',
+                start_url: '/',
                 icons: [
                     {
                         src: '/icons/logo.svg',

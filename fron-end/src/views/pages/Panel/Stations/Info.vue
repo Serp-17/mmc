@@ -1,5 +1,8 @@
-<script setup lang="ts">
+<script setup>
 import { ref, defineProps, onMounted } from 'vue';
+import { useStore } from 'vuex';
+import { useRoute } from 'vue-router';
+import { useClipboard } from '@/utils/useClipboard';
 
 const props = defineProps({
     panel_status: {
@@ -12,7 +15,10 @@ const props = defineProps({
         default: []
     }
 });
+const { params } = useRoute();
+const store = useStore();
 const menu = ref(null);
+const { copyToClipboard } = useClipboard();
 
 const items = ref([
     { label: 'Add New', icon: 'pi pi-fw pi-plus' },
@@ -20,6 +26,13 @@ const items = ref([
 ]);
 const dropdownStatus = ref(['in progress', 'qa', 'done']);
 const status = ref(null);
+
+const onChange = (e) => {
+    const { value } = e;
+    store.dispatch('panels/putPanel', { id: params.id, data: { status: value } }).then(() => {
+        store.dispatch('panels/fetchPanelById', params.id);
+    });
+};
 
 onMounted(() => {
     status.value = props.panel_status;
@@ -32,7 +45,7 @@ onMounted(() => {
             <div class="font-semibold text-xl">Info</div>
             <div class="flex justify-start items-center gap-6">
                 <div class="font-semibold text-lg flex items-center">Status</div>
-                <Select v-model="status" :options="dropdownStatus" placeholder="Select" />
+                <Select v-model="status" :options="dropdownStatus" placeholder="Select" @change="onChange" class="uppercase" />
             </div>
             <hr />
             <div class="">
@@ -112,7 +125,7 @@ onMounted(() => {
                             <i class="pi pi-external-link"></i>
                         </a>
                     </InputGroupAddon>
-                    <InputGroupAddon class="cursor-pointer">
+                    <InputGroupAddon class="cursor-pointer" @click="copyToClipboard(item)">
                         <i class="pi pi-copy"></i>
                     </InputGroupAddon>
                 </InputGroup>

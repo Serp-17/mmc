@@ -27,6 +27,7 @@ const calculateProgress = (total, completed) => {
                         <div :class="`bg-${colors[index]}`" class="h-full" :style="`width: ${calculateProgress(item.count, item.panelDone)}%`"></div>
                     </div>
                     <span :class="`text-${colors[index]}`" class="ml-4 font-medium">%{{ calculateProgress(item.count, item.panelDone) }}</span>
+                    <span class="ms-4 text-gray-400">({{item.panelDone + '/' + item.count  }})</span>
                 </div>
             </li>
         </ul>

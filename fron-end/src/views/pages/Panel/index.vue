@@ -15,7 +15,7 @@ const panel = computed(() => store.getters['panels/getPanel']);
 const breadcrumbHome = ref({ icon: 'pi pi-home', to: '/' });
 const breadcrumbItems = computed(() => {
     if (!panel.value) return [];
-    return [{ label: 'Volume', url: `/volumes/${panel.value.volume_id}` }, { label: 'Panels', url: `/panels/${panel.value.volume_id}` }, { label: 'Panels name' }];
+    return [{ label: 'Volume', url: `/volumes/${panel.value.volume_id}` }, { label: 'Panels', url: `/panels/${panel.value.volume_id}` }, { label: `Panel ${panel.value?.name}` }];
 });
 
 const selectPage = (str) => {
@@ -44,7 +44,7 @@ watch(panel, (newPanel) => {
 </script>
 
 <template>
-    <Breadcrumb :home="breadcrumbHome" :model="breadcrumbItems"/>
+    <Breadcrumb :home="breadcrumbHome" :model="breadcrumbItems" />
     <div class="card mt-8">
         <div class="font-semibold text-xl mb-4">
             Panel - {{ panel?.name || 'Loading...' }}
@@ -64,7 +64,7 @@ watch(panel, (newPanel) => {
         <Info v-if="station === 'Info'" :panel_status="panel.status" :links="panel.link" />
         <Saw1 v-if="station === 'Saw1'" :id_panel="params.id" />
         <Saw2 v-if="station === 'Saw2'" :id_panel="params.id" />
-        <Wek v-if="station === 'Wek'" />
+        <Wek v-if="station === 'Wek'" :id_panel="params.id" />
         <BFly v-if="station === 'B-Fly'" />
         <Cassettes v-if="station === 'Cassettes'" />
         <Internal v-if="station === 'Internal'" />

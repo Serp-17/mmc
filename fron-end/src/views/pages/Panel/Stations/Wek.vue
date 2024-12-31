@@ -1,13 +1,19 @@
 <script setup>
-import { ref } from 'vue';
+import { computed, defineProps, onMounted, ref, watch } from 'vue';
 import { useToast } from 'primevue/usetoast';
+import { useStore } from 'vuex';
+import { dropdownValues } from '@/utils/const';
 
+const props = defineProps({
+    id_panel: {
+        type: String || Number,
+        default: 0
+    }
+});
+
+const store = useStore();
 const toast = useToast();
-const dropdownValues = ref([
-    { name: 'Yes', value: 'yes' },
-    { name: 'No', code: 'no' }
-]);
-
+const station = computed(() => store.getters['stations/getStation']);
 const panelLengthAndHeight = ref({
     length: null,
     height: null
@@ -34,6 +40,30 @@ const isDisabled = () => {
 
 const handleSubmit = () => {
     toast.add({ severity: 'info', summary: 'Success', detail: 'Uploaded', life: 3000 });
+    store.dispatch('stations/postStation', {
+        id_panel: props.id_panel,
+        station: 'Wek',
+        data: {
+            panelLengthAndHeight: {
+                length: panelLengthAndHeight.value.length,
+                height: panelLengthAndHeight.value.height
+            },
+            frameCornerToCornerMeasurement: {
+                one: frameCornerToCornerMeasurement.value.one,
+                two: frameCornerToCornerMeasurement.value.two
+            },
+            isFrameWithinSpecification: isFrameWithinSpecification.value.value,
+            areNailsProtrudingOrMissing: areNailsProtrudingOrMissing.value.value,
+            structuralOpeningLengthAndWidth: {
+                length: structuralOpeningLengthAndWidth.value.length,
+                height: structuralOpeningLengthAndWidth.value.height
+            },
+            structuralOpeningLengthAndWidthSecond: {
+                length: structuralOpeningLengthAndWidthSecond.value.length,
+                height: structuralOpeningLengthAndWidthSecond.value.height
+            }
+        }
+    });
 };
 
 const handleSelect = (event, name) => {
@@ -64,6 +94,38 @@ const handleSelect = (event, name) => {
         });
     }
 };
+
+onMounted(() => {
+    store.dispatch('stations/fetchStationByIdAndName', { id_panel: props.id_panel, station: 'wek' });
+});
+
+watch(
+    [station],
+    () => {
+        if (station.value !== null) {
+            const qaData = station.value.qa_data;
+
+            for (const key in station.value.qa_data) {
+                if (qaData.hasOwnProperty(key)) {
+                    if (key === 'panelLengthAndHeight') {
+                        panelLengthAndHeight.value = qaData[key];
+                    } else if (key === 'frameCornerToCornerMeasurement') {
+                        frameCornerToCornerMeasurement.value = qaData[key];
+                    } else if (key === 'isFrameWithinSpecification') {
+                        isFrameWithinSpecification.value = { name: qaData[key], value: qaData[key] };
+                    } else if (key === 'areNailsProtrudingOrMissing') {
+                        areNailsProtrudingOrMissing.value = { name: qaData[key], value: qaData[key] };
+                    } else if (key === 'structuralOpeningLengthAndWidth') {
+                        structuralOpeningLengthAndWidth.value = qaData[key];
+                    } else if (key === 'structuralOpeningLengthAndWidthSecond') {
+                        structuralOpeningLengthAndWidthSecond.value = qaData[key];
+                    }
+                }
+            }
+        }
+    },
+    { immediate: true }
+);
 </script>
 
 <template>

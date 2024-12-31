@@ -1,7 +1,8 @@
 <script setup>
-import {computed, defineProps, onMounted, ref, watch} from 'vue';
+import { computed, defineProps, onMounted, ref, watch } from 'vue';
 import { useToast } from 'primevue/usetoast';
 import { useStore } from 'vuex';
+import { dropdownValues } from '@/utils/const';
 
 const props = defineProps({
     id_panel: {
@@ -11,11 +12,6 @@ const props = defineProps({
 });
 const store = useStore();
 const toast = useToast();
-const dropdownValues = ref([
-    { name: 'yes', value: 'yes' },
-    { name: 'no', value: 'no' }
-]);
-
 const station = computed(() => store.getters['stations/getStation']);
 const isMaterialsInSpec = ref(null);
 const areCuttingListPiecesLabeledCorrectly = ref(null);
@@ -91,20 +87,20 @@ watch(
                     <div class="font-semibold text-xl flex items-center gap-4 mb-4">
                         1. Are all materials in spec
                     </div>
-                    <Select v-model="isMaterialsInSpec" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                    <Select v-model="isMaterialsInSpec" :options="dropdownValues" optionLabel="name" placeholder="Select" class="uppercase" />
                 </div>
                 <div>
                     <div class="font-semibold text-xl flex items-center gap-4 mb-4">
                         2. Are all pieces of the cutting list labelled correctly?
                     </div>
                     <div class="font-semibold text-xl"></div>
-                    <Select v-model="areCuttingListPiecesLabeledCorrectly" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                    <Select v-model="areCuttingListPiecesLabeledCorrectly" :options="dropdownValues" optionLabel="name" placeholder="Select" class="uppercase" />
                 </div>
                 <div>
                     <div class="font-semibold text-xl flex items-center gap-4 mb-4">
                         3. Are all items in tolerance?
                     </div>
-                    <Select v-model="areItemsInTolerance" :options="dropdownValues" optionLabel="name" placeholder="Select" />
+                    <Select v-model="areItemsInTolerance" :options="dropdownValues" optionLabel="name" placeholder="Select" class="uppercase" />
                 </div>
                 <div class="col-span-full lg:col-span-6">
                     <div class="font-semibold text-xl mb-4">Insert image</div>

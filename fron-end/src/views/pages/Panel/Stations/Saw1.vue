@@ -2,6 +2,7 @@
 import { defineProps, ref, onMounted, computed, watch } from 'vue';
 import { useStore } from 'vuex';
 import { useToast } from 'primevue/usetoast';
+import { dropdownValues } from '@/utils/const';
 
 const props = defineProps({
     id_panel: {
@@ -11,11 +12,6 @@ const props = defineProps({
 });
 const store = useStore();
 const toast = useToast();
-const dropdownValues = ref([
-    { name: 'yes', value: 'yes' },
-    { name: 'no', value: 'no' }
-]);
-
 const station = computed(() => store.getters['stations/getStation']);
 const isMaterialDefectFree = ref(null);
 const arePiecesLabelledCorrectly = ref(null);

@@ -63,7 +63,7 @@ watch(panel, (newPanel) => {
     <div v-if="panel">
         <Info v-if="station === 'Info'" :panel_status="panel.status" :links="panel.link" />
         <Saw1 v-if="station === 'Saw1'" :id_panel="params.id" />
-        <Saw2 v-if="station === 'Saw2'" />
+        <Saw2 v-if="station === 'Saw2'" :id_panel="params.id" />
         <Wek v-if="station === 'Wek'" />
         <BFly v-if="station === 'B-Fly'" />
         <Cassettes v-if="station === 'Cassettes'" />

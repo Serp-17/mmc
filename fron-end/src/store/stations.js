@@ -3,7 +3,8 @@ import { stationsService } from '@/services/StationsService';
 export default {
     namespaced: true,
     state: () => ({
-        stations: null
+        stations: null,
+        station: null
     }),
     mutations: {
         setStation(state, data) {
@@ -21,9 +22,17 @@ export default {
             }
         },
         async postStation({ commit }, { id_panel, station, data }) {
-            console.log(id_panel, station, data)
             try {
                 const res = await stationsService.postStation(id_panel, station, data);
+                commit('setStation', res.data);
+            } catch (err) {
+                console.error('Error station storage:', err);
+                commit('setStation', null);
+            }
+        },
+        async fetchStationByIdAndName({ commit }, data) {
+            try {
+                const res = await stationsService.getStationByIdAndName(data.id_panel, data.station);
                 commit('setStation', res.data);
             } catch (err) {
                 console.error('Error station storage:', err);
@@ -33,7 +42,7 @@ export default {
     },
     getters: {
         getStation(state) {
-            return state.stations;
+            return state.station;
         }
     }
 };

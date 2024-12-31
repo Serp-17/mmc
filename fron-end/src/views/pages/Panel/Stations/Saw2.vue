@@ -1,29 +1,47 @@
 <script setup>
-import { onMounted, ref } from 'vue';
+import {computed, defineProps, onMounted, ref, watch} from 'vue';
 import { useToast } from 'primevue/usetoast';
+import { useStore } from 'vuex';
 
+const props = defineProps({
+    id_panel: {
+        type: String || Number,
+        default: 0
+    }
+});
+const store = useStore();
 const toast = useToast();
 const dropdownValues = ref([
-    { name: 'Yes', value: 'yes' },
-    { name: 'No', code: 'no' }
+    { name: 'yes', value: 'yes' },
+    { name: 'no', value: 'no' }
 ]);
+
+const station = computed(() => store.getters['stations/getStation']);
 const isMaterialsInSpec = ref(null);
 const areCuttingListPiecesLabeledCorrectly = ref(null);
 const areItemsInTolerance = ref(null);
 
 const selectedFiles = ref([]);
-// onMounted(() => {
-//
-// });
+onMounted(() => {
+    store.dispatch('stations/fetchStationByIdAndName', { id_panel: props.id_panel, station: 'saw2' });
+});
 
 const isDisabled = () => {
-    return isMaterialsInSpec.value === null || areCuttingListPiecesLabeledCorrectly.value === null || areItemsInTolerance.value === null || selectedFiles.value.length === 0;
+    return isMaterialsInSpec.value === null || areCuttingListPiecesLabeledCorrectly.value === null || areItemsInTolerance.value === null;
 };
 
 const handleSubmit = () => {
     toast.add({ severity: 'info', summary: 'Success', detail: 'Uploaded', life: 3000 });
+    store.dispatch('stations/postStation', {
+        id_panel: props.id_panel,
+        station: 'Saw2',
+        data: {
+            isMaterialsInSpec: isMaterialsInSpec.value.value,
+            areCuttingListPiecesLabeledCorrectly: areCuttingListPiecesLabeledCorrectly.value.value,
+            areItemsInTolerance: areItemsInTolerance.value.value
+        }
+    });
 };
-
 const handleSelect = (event) => {
     selectedFiles.value = [];
 
@@ -41,6 +59,28 @@ const handleSelect = (event) => {
         reader.readAsDataURL(file);
     });
 };
+
+watch(
+    [station],
+    () => {
+        if (station.value !== null) {
+            const qaData = station.value.qa_data;
+
+            for (const key in station.value.qa_data) {
+                if (qaData.hasOwnProperty(key)) {
+                    if (key === 'isMaterialsInSpec') {
+                        isMaterialsInSpec.value = { name: qaData[key], value: qaData[key] };
+                    } else if (key === 'areCuttingListPiecesLabeledCorrectly') {
+                        areCuttingListPiecesLabeledCorrectly.value = { name: qaData[key], value: qaData[key] };
+                    } else if (key === 'areItemsInTolerance') {
+                        areItemsInTolerance.value = { name: qaData[key], value: qaData[key] };
+                    }
+                }
+            }
+        }
+    },
+    { immediate: true }
+);
 </script>
 
 <template>

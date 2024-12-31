@@ -127,17 +127,18 @@ connection.query(createPanelsTable, (err) => {
 
 const createStationsTable = `
     CREATE TABLE IF NOT EXISTS stations (
-        id INT AUTO_INCREMENT PRIMARY KEY,
-        volume_id INT NOT NULL,
-        user_id INT DEFAULT NULL,
-        panel_id INT NOT NULL,
-        name ENUM('saw1', 'saw2', 'wek', 'b-fly', 'joist prep', 'cassettes', 'window station', 'internal', 'parapet') NOT NULL,
-        qa_data JSON DEFAULT NULL,
-        created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-        updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        FOREIGN KEY (volume_id) REFERENCES volumes(id) ON DELETE CASCADE,
-        FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
-        FOREIGN KEY (panel_id) REFERENCES panels(id) ON DELETE CASCADE
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    volume_id INT NOT NULL,
+    user_id INT DEFAULT NULL,
+    panel_id INT NOT NULL,
+    name ENUM('saw1', 'saw2', 'wek', 'b-fly', 'joist prep', 'cassettes', 'window station', 'internal', 'parapet') NOT NULL,
+    qa_data JSON DEFAULT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+    FOREIGN KEY (volume_id) REFERENCES volumes(id) ON DELETE CASCADE,
+    FOREIGN KEY (user_id) REFERENCES users(id) ON DELETE SET NULL,
+    FOREIGN KEY (panel_id) REFERENCES panels(id) ON DELETE CASCADE,
+    UNIQUE KEY unique_station (panel_id, name)  -- добавление уникального индекса
     );
 `;
 

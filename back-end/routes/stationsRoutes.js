@@ -1,13 +1,12 @@
 const express = require('express');
 const router = express.Router();
-const { createStation } = require('../models/stationsModel');
+const { createStation, getStationByPanelAndName, getAllStations } = require('../models/stationsModel');
 
-// Создание новой станции
 router.post('/:panel_id', require("../middleware/auth"), async (req, res) => {
     try {
-        const { panel_id } = req.params; // ID панели из URL
-        const { station_name } = req.query; // Название станции из query-параметра
-        const qa_data = req.body; // Данные из тела запроса
+        const { panel_id } = req.params;
+        const { station_name } = req.query;
+        const qa_data = req.body;
         const user_id = req.user.id;
 
         const validNames = [
@@ -40,6 +39,31 @@ router.post('/:panel_id', require("../middleware/auth"), async (req, res) => {
     } catch (error) {
         console.error('Error creating station:', error);
         return res.status(500).json({ error: 'Internal server error' });
+    }
+});
+
+router.get("/", async (req, res) => {
+    try {
+        const stations = await getAllStations();
+        res.status(200).json(stations);
+    } catch (err) {
+        res.status(500).json({ message: "Error retrieving stations", error: err.message });
+    }
+});
+
+router.get("/station/:panel_id/:name", async (req, res) => {
+    const { panel_id, name } = req.params;
+
+    try {
+        const station = await getStationByPanelAndName(panel_id, name);
+
+        // if (station === null) {
+        //     return res.status(404).json({ message: "Station not found" });
+        // }
+
+        return res.status(200).json(station);
+    } catch (err) {
+        return res.status(500).json({ message: "Error retrieving station", error: err.message });
     }
 });
 

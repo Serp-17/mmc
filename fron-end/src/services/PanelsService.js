@@ -14,5 +14,8 @@ export const panelsService = {
     },
     async putPanel(id, data) {
         return await axiosWithAuth.put(`${URL_AUTH}/${id}`, data);
+    },
+    async postPanel(data) {
+        return await axiosWithAuth.post(`${URL_AUTH}/`, data);
     }
 };

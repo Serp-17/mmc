@@ -2,7 +2,7 @@
 import { useStore } from 'vuex';
 import { useLayout } from '@/layout/composables/layout';
 import AppConfigurator from './AppConfigurator.vue';
-import { onMounted, computed } from "vue";
+import { onMounted, computed } from 'vue';
 
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
 const store = useStore();

@@ -15,6 +15,9 @@ export default {
         clearToken(state) {
             state.token = null;
             removeFromStorage();
+        },
+        setUser(state, user) {
+            state.user = user;
         }
     },
     actions: {

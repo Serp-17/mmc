@@ -1,12 +1,20 @@
 <script setup>
+import { useStore } from 'vuex';
 import { useLayout } from '@/layout/composables/layout';
 import AppConfigurator from './AppConfigurator.vue';
+import { onMounted, computed } from "vue";
 
 const { toggleMenu, toggleDarkMode, isDarkTheme } = useLayout();
+const store = useStore();
+const user = computed(() => store.getters['user/getUser']);
+
+onMounted(() => {
+    store.dispatch('user/fetchUser');
+});
 </script>
 
 <template>
-    <div class="layout-topbar">
+    <div class="layout-topbar" @click="console.log(user)">
         <div class="layout-topbar-logo-container">
             <button class="layout-menu-button layout-topbar-action" @click="toggleMenu">
                 <i class="pi pi-bars"></i>

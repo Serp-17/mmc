@@ -1,4 +1,5 @@
 import { removeFromStorage, getAccessToken, saveAccessTokenStorage } from '@/utils/cookies';
+import { authService } from '@/services/AuthService';
 
 export default {
     namespaced: true,
@@ -22,6 +23,15 @@ export default {
         },
         logoutUser({ commit }) {
             commit('clearToken');
+        },
+        async fetchUser({ commit }) {
+            try {
+                const res = await authService.fetchUser();
+                commit('setUser', res.data);
+            } catch (err) {
+                console.error('Error fetching user:', err);
+                commit('setUser', null);
+            }
         }
     },
     getters: {

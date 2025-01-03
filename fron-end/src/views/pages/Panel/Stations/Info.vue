@@ -119,13 +119,14 @@ onMounted(() => {
             <div class="font-semibold text-xl mb-4">Links</div>
             <div class="grid gap-6">
                 <InputGroup v-for="(item, index) in links" :key="index">
-                    <InputText :value="item" />
+                    <div class="me-5 flex items-center font-semibold">{{ item.name }}</div>
+                    <InputText :value="item.url" />
                     <InputGroupAddon class="cursor-pointer">
-                        <a target="_blank" :href="item">
+                        <a target="_blank" :href="item.url">
                             <i class="pi pi-external-link"></i>
                         </a>
                     </InputGroupAddon>
-                    <InputGroupAddon class="cursor-pointer" @click="copyToClipboard(item)">
+                    <InputGroupAddon class="cursor-pointer" @click="copyToClipboard(item.url)">
                         <i class="pi pi-copy"></i>
                     </InputGroupAddon>
                 </InputGroup>

@@ -3,7 +3,7 @@
     "version": "4.2.0",
     "scripts": {
         "dev": "vite",
-        "build": "vite build",
+        "build": "vite build --mode product",
         "preview": "vite preview",
         "lint": "eslint --fix sakai-vue --ext .vue,.js,.jsx,.cjs,.mjs --fix --ignore-path .gitignore"
     },
